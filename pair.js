@@ -20,10 +20,10 @@ function removeFile(FilePath) {
 
 router.get("/", async (req, res) => {
   let num = req.query.number;
-  async function LunaPair() {
+  async function RobinPair() {
     const { state, saveCreds } = await useMultiFileAuthState(`./session`);
     try {
-      let LunaPairWeb = makeWASocket({
+      let RobinPairWeb = makeWASocket({
         auth: {
           creds: state.creds,
           keys: makeCacheableSignalKeyStore(
@@ -36,25 +36,25 @@ router.get("/", async (req, res) => {
         browser: Browsers.macOS("Safari"),
       });
 
-      if (!LunaPairWeb.authState.creds.registered) {
+      if (!RobinPairWeb.authState.creds.registered) {
         await delay(1500);
         num = num.replace(/[^0-9]/g, "");
-        const code = await LunaPairWeb.requestPairingCode(num);
+        const code = await RobinPairWeb.requestPairingCode(num);
         if (!res.headersSent) {
           await res.send({ code });
         }
       }
 
-      LunaPairWeb.ev.on("creds.update", saveCreds);
-      LunaPairWeb.ev.on("connection.update", async (s) => {
+      RobinPairWeb.ev.on("creds.update", saveCreds);
+      RobinPairWeb.ev.on("connection.update", async (s) => {
         const { connection, lastDisconnect } = s;
         if (connection === "open") {
           try {
             await delay(10000);
-            const sessionHashan = fs.readFileSync("./session/creds.json");
+            const sessionPrabath = fs.readFileSync("./session/creds.json");
 
             const auth_path = "./session/";
-            const user_jid = jidNormalizedUser(LunaPairWeb.user.id);
+            const user_jid = jidNormalizedUser(RobinPairWeb.user.id);
 
             function randomMegaId(length = 6, numberLength = 4) {
               const characters =
@@ -83,16 +83,16 @@ router.get("/", async (req, res) => {
 
             const sid = `*💖 𝙿 𝚁 𝙸 𝙽 𝙲 𝙴 𝚂 𝚂    𝙻 𝚄 𝙽 𝙰 💖 MD   [ C R E A T E D   B Y   H A S H A N   L K ]*\n\n👉 ${string_session} 👈\n\n*This is the your Session ID, copy this id and paste into config.js file*\n\n*You can ask any question by joining Our Official Luna MD Whatsapp Group Using This Link*\n\n*https://chat.whatsapp.com/IxUX7F1W6k6AlrbRuEzNik*\n\n*Follow Our Official Luna MD WA Channel Too*\n\n*https://whatsapp.com/channel/0029VbAxbzyK0IBoK7GPrO2L*`;
             const mg = `🛑 *Do not share this code to anyone* 🛑`;
-            const dt = await LunaPairWeb.sendMessage(user_jid, {
+            const dt = await RobinPairWeb.sendMessage(user_jid, {
               image: {
-                url: "https://raw.githubusercontent.com/Hashan000-1/IMAGE-TO-URL/refs/heads/main/LUNA%20MD.jpg",
+                url: "https://raw.githubusercontent.com/Dark-Robin/Bot-Helper/refs/heads/main/autoimage/Bot%20robin%20WP.jpg",
               },
               caption: sid,
             });
-            const msg = await ::LunaPairWeb.sendMessage(user_jid, {
+            const msg = await RobinPairWeb.sendMessage(user_jid, {
               text: string_session,
             });
-            const msg1 = await LunaPairWeb.sendMessage(user_jid, { text: mg });
+            const msg1 = await RobinPairWeb.sendMessage(user_jid, { text: mg });
           } catch (e) {
             exec("pm2 restart prabath");
           }
@@ -107,25 +107,25 @@ router.get("/", async (req, res) => {
           lastDisconnect.error.output.statusCode !== 401
         ) {
           await delay(10000);
-          LunaPair();
+          RobinPair();
         }
       });
     } catch (err) {
-      exec("pm2 restart Luna-md");
+      exec("pm2 restart Robin-md");
       console.log("service restarted");
-      LunaPair();
+      RobinPair();
       await removeFile("./session");
       if (!res.headersSent) {
         await res.send({ code: "Service Unavailable" });
       }
     }
   }
-  return await LunaPair();
+  return await RobinPair();
 });
 
 process.on("uncaughtException", function (err) {
   console.log("Caught exception: " + err);
-  exec("pm2 restart Luna");
+  exec("pm2 restart Robin");
 });
 
 module.exports = router;
